@@ -16,6 +16,13 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                <!-- Panel de control admin -->
+                @can('admin-only')
+                    <x-nav-link :href="route('panel.control')" :active="request()->routeIs('panel.control')">
+                        Panel de control
+                    </x-nav-link>
+                @endcan
             </div>
 
             <!-- Settings Dropdown -->
