@@ -26,6 +26,7 @@ o Reseñas de usuarios (con control de moderación).
             $table->string('poster');
             $table->integer('media');
             $table->timestamps();
+            $table->string('tmdb_id')->unique()->after('media');
             //no se si hará falta algo mas
         });
     }

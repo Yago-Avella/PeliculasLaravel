@@ -33,12 +33,20 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'fotoPerfil' => ['nullable','image','mimes:jpg,jpeg,png','max:2048'],
         ]);
+
+        $path = null;
+
+        if ($request->hasFile('fotoPerfil')) {
+            $path = $request->file('fotoPerfil')->store('fotos_perfil', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'fotoPerfil' => $path,
         ]);
 
         event(new Registered($user));
