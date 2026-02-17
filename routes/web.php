@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\PeliculasController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,5 +28,7 @@ Route::get('/panel-control', function () {
     return view('admin.panel-control');
 
 })->name('panel.control');
+
+Route::get('/peliculas', [PeliculasController::class, 'index'])->name('movies.index');
 
 require __DIR__.'/auth.php';
