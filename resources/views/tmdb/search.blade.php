@@ -14,20 +14,20 @@
         </form>
 
         {{-- Resultados --}}
-        dd($movies);
-        @isset($movies)
+        dd($peliculas);
+        @isset($peliculas)
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                @foreach($movies as $movie)
+                @foreach($peliculas as $pelicula)
                     <div class="bg-white p-4 shadow rounded">
-                        <h3 class="font-bold">{{ $movie['title'] }}</h3>
-                        <p>Año: {{ substr($movie['release_date'] ?? '', 0, 4) }}</p>
+                        <h3 class="font-bold">{{ $pelicula['title'] }}</h3>
+                        <p>Año: {{ substr($pelicula['release_date'] ?? '', 0, 4) }}</p>
 
-                        @if($movie['poster_path'])
-                            <img src="https://image.tmdb.org/t/p/w200{{ $movie['poster_path'] }}"
+                        @if($pelicula['poster_path'])
+                            <img src="https://image.tmdb.org/t/p/w200{{ $pelicula['poster_path'] }}"
                                  class="mt-2 rounded">
                         @endif
 
-                        <form method="POST" action="{{ route('tmdb.store', $movie['id']) }}">
+                        <form method="POST" action="{{ route('tmdb.store', $pelicula['id']) }}">
                             @csrf
                             <button class="mt-3 bg-green-500 text-white px-3 py-1 rounded">
                                 Añadir a mi catálogo
