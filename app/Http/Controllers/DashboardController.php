@@ -9,8 +9,8 @@ class DashboardController extends Controller
 {
     public function index(){
         // Trae todas las películas de la base de datos
-        $movies = Movie::all();
+        $peliculas = Pelicula::all();
 
-        return view('dashboard', compact('movies'));
+        return view('dashboard', compact('peliculas'));
     }
 }

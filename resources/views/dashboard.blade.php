@@ -5,15 +5,24 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    @foreach ($pelis as $peli)
-                        <li>{{ $peli->title }}</li>
-                    @endforeach
+    <div class="p-6 space-y-4">
+
+        <h3 class="text-lg font-bold">Tus películas:</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach ($peliculas as $pelicula)
+                <div class="p-4 bg-white shadow rounded">
+                    <h4 class="font-bold text-lg">{{ $pelicula->titulo }}</h4>
+                    <p><strong>Año:</strong> {{ $pelicula->anyo }}</p>
+                    <p><strong>Duración:</strong> {{ $pelicula->duracion }} min</p>
+                    <p><strong>Media:</strong> {{ $pelicula->media ?? 'Sin valoraciones' }}</p>
+                    <p class="mt-2">{{ $pelicula->sinopsis }}</p>
+                    @if ($pelicula->poster)
+                        <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
+                    @endif
                 </div>
-            </div>
+            @endforeach
         </div>
+
     </div>
 </x-app-layout>

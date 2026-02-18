@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function movies()
+    {
+        return $this->belongsToMany(Pelicula::class, 'pelicula_user');
+    }
 }

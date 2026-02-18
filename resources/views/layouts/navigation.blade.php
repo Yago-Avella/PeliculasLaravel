@@ -15,14 +15,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('tmdb.index')" :active="request()->routeIs('tmdb.*')">
+                        Buscar películas
+                    </x-nav-link>
+
+                    <!-- Panel de control admin -->
+                    @can('admin-only')
+                        <x-nav-link :href="route('panel.control')" :active="request()->routeIs('panel.control')">
+                            Panel de control
+                        </x-nav-link>
+                    @endcan
                 </div>
 
-                <!-- Panel de control admin -->
-                @can('admin-only')
-                    <x-nav-link :href="route('panel.control')" :active="request()->routeIs('panel.control')">
-                        Panel de control
-                    </x-nav-link>
-                @endcan
+                
+
+
             </div>
 
             <!-- Settings Dropdown -->

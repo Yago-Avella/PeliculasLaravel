@@ -16,4 +16,7 @@ class Pelicula extends Model{
         'media',
         'tmdb_id',
     ];
+    public function users(){
+        return $this->belongsToMany(User::class, 'pelicula_user');
+    }
 }

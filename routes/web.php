@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TMDBController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/import-tmdb', [TMDBController::class, 'importPopular'])->name('import.tmdb');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/tmdb', [TMDBController::class, 'index'])->name('tmdb.index');
+    Route::get('/tmdb/search', [TMDBController::class, 'search'])->name('tmdb.search');
+    Route::post('/tmdb/store/{tmdb_id}', [TMDBController::class, 'store'])->name('tmdb.store');
 });
 
 Route::get('/panel-control', function () {
