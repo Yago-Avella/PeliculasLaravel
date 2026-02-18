@@ -61,8 +61,10 @@ class TMDBController extends Controller
         );
 
         // Relacionar con el usuario logueado (tabla pivot)
+        // el modelo User define la relación como movies(), no peliculas()
         Auth::user()->peliculas()->syncWithoutDetaching([$pelicula->id]);
 
-        return redirect()->back()->with('success', 'Película añadida a tu catálogo');
+        // después de añadirla, redirigimos al dashboard del usuario (películas privadas)
+        return redirect()->route('dashboard')->with('success', 'Película añadida a tu catálogo');
     }
 }

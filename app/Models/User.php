@@ -48,7 +48,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function movies()
+    public function peliculas()
     {
         return $this->belongsToMany(Pelicula::class, 'pelicula_user');
     }

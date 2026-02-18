@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::delete('/dashboard/peliculas/{pelicula}', [DashboardController::class, 'destroy'])->name('dashboard.peliculas.destroy');
 
     Route::get('/tmdb', [TMDBController::class, 'index'])->name('tmdb.index');
     Route::get('/tmdb/search', [TMDBController::class, 'search'])->name('tmdb.search');
