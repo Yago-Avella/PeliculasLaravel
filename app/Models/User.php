@@ -50,6 +50,6 @@ class User extends Authenticatable
 
     public function peliculas()
     {
-        return $this->belongsToMany(Pelicula::class, 'pelicula_user');
+        return $this->belongsToMany(Pelicula::class, 'pelicula_user')->withPivot('watched');
     }
 }

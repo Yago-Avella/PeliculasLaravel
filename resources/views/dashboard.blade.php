@@ -23,8 +23,10 @@
             </form>
         </div>
 
+        {{-- Películas NO VISTAS --}}
+        <h3 class="text-2xl font-bold text-gray-800 mt-8">No Vistas</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($peliculas as $pelicula)
+            @forelse ($peliculas->where('pivot.watched', false) as $pelicula)
                 <div class="p-4 bg-white shadow rounded">
                     <h4 class="font-bold text-lg">{{ $pelicula->titulo }}</h4>
                     <p><strong>Año:</strong> {{ $pelicula->anyo }}</p>
@@ -41,17 +43,72 @@
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
 
-                    <form action="{{ route('dashboard.peliculas.destroy', $pelicula) }}" method="POST" class="mt-2">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                        onclick="return confirm('¿Estás seguro de que quieres eliminar esta película?')"
-                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                            Eliminar
-                        </button>
-                    </form>
+                    <div class="flex gap-2 mt-2">
+                        <form action="{{ route('dashboard.peliculas.toggleWatched', $pelicula) }}" method="POST" class="flex-1">
+                            @csrf
+                            <button type="submit" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 w-full">
+                                Marcar como vista
+                            </button>
+                        </form>
+                        <form action="{{ route('dashboard.peliculas.destroy', $pelicula) }}" method="POST" class="flex-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                            onclick="return confirm('¿Estás seguro de que quieres eliminar esta película?')"
+                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 w-full">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="col-span-full text-gray-500">No hay películas sin ver.</p>
+            @endforelse
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-300">
+
+        {{-- Películas VISTAS --}}
+        <h3 class="text-2xl font-bold text-gray-800 mt-8">Vistas</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @forelse ($peliculas->where('pivot.watched', true) as $pelicula)
+                <div class="p-4 bg-white shadow rounded opacity-75">
+                    <h4 class="font-bold text-lg">{{ $pelicula->titulo }}</h4>
+                    <p><strong>Año:</strong> {{ $pelicula->anyo }}</p>
+                    <p><strong>Duración:</strong> {{ $pelicula->duracion }} min</p>
+                    <p><strong>Media:</strong> {{ $pelicula->media ?? 'Sin valoraciones' }}</p>
+                    <p class="mt-2">{{ $pelicula->sinopsis }}</p>
+
+                    {{-- mostrar géneros asociados --}}
+                    @if($pelicula->generos->isNotEmpty())
+                        <p class="mt-2"><strong>Géneros:</strong> {{ $pelicula->generos->pluck('name')->join(', ') }}</p>
+                    @endif
+
+                    @if ($pelicula->poster)
+                        <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
+                    @endif
+
+                    <div class="flex gap-2 mt-2">
+                        <form action="{{ route('dashboard.peliculas.toggleWatched', $pelicula) }}" method="POST" class="flex-1">
+                            @csrf
+                            <button type="submit" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
+                                Marcar como no vista
+                            </button>
+                        </form>
+                        <form action="{{ route('dashboard.peliculas.destroy', $pelicula) }}" method="POST" class="flex-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                            onclick="return confirm('¿Estás seguro de que quieres eliminar esta película?')"
+                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 w-full">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @empty
+                <p class="col-span-full text-gray-500">No hay películas vistas.</p>
+            @endforelse
         </div>
 
     </div>

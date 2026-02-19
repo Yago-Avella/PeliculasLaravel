@@ -34,4 +34,21 @@ class DashboardController extends Controller
         Auth::user()->peliculas()->detach($pelicula->id);
         return redirect()->route('dashboard')->with('success', 'Película eliminada de tu catálogo');
     }
+
+    public function toggleWatched(Pelicula $pelicula)
+    {
+        $user = Auth::user();
+        
+        // obtener el valor actual de watched desde el pivot
+        $watched = $user->peliculas()
+            ->find($pelicula->id)
+            ->pivot
+            ->watched;
+
+        // cambiar el valor de watched
+        $user->peliculas()
+            ->updateExistingPivot($pelicula->id, ['watched' => !$watched]);
+
+        return redirect()->route('dashboard')->with('success', 'Estado de visualización actualizado');
+    }
 }
