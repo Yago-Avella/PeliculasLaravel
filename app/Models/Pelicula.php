@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Genero;
 
 class Pelicula extends Model
 {
@@ -15,4 +16,12 @@ class Pelicula extends Model
         'poster',
         'media',
     ];
+
+    /**
+     * Géneros asociados a la película (muchos a muchos)
+     */
+    public function generos()
+    {
+        return $this->belongsToMany(Genero::class, 'genero_pelicula');
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Pelicula;
+use App\Models\Genero;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -41,7 +42,11 @@ class TMDBController extends Controller
                 'language' => 'es-ES'
             ]);
 
+        
+
         $data = $response->json();
+
+        //dd($data); //Imprime toda la pelicula que guardas
 
         if (!$data || !isset($data['id'])) {
             return redirect()->back()->with('error', 'No se pudo obtener la información de la película');
@@ -58,11 +63,21 @@ class TMDBController extends Controller
                 'poster' => isset($data['poster_path']) ? 'https://image.tmdb.org/t/p/w500' . $data['poster_path'] : null,
                 'media' => $data['vote_average'] ?? 0,
             ]
+
         );
 
         // Relacionar con el usuario logueado (tabla pivot)
         // el modelo User define la relación como movies(), no peliculas()
         Auth::user()->peliculas()->syncWithoutDetaching([$pelicula->id]);
+
+        // asociar géneros a la película; crearlos si no existen
+        if (!empty($data['genres']) && is_array($data['genres'])) {
+            foreach ($data['genres'] as $g) {
+                // usamos el nombre como identificador único en nuestra DB
+                $genre = Genero::firstOrCreate(['name' => $g['name']]);
+                $pelicula->generos()->syncWithoutDetaching($genre->id);
+            }
+        }
 
         // después de añadirla, redirigimos al dashboard del usuario (películas privadas)
         return redirect()->route('dashboard')->with('success', 'Película añadida a tu catálogo');

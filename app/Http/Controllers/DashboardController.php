@@ -4,15 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pelicula;
+use App\Models\Genero;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index(){
-        // Trae solo las películas asociadas al usuario logueado
-        $peliculas = Auth::user()->peliculas()->get();
+    public function index(Request $request){
+        // recuperar todos los géneros para el filtro
+        $generos = Genero::orderBy('name')->get();
 
-        return view('dashboard', compact('peliculas'));
+        // construimos la consulta de las películas del usuario
+        $query = Auth::user()->peliculas()->with('generos');
+
+        // aplicar filtro si se solicitó un género
+        if ($request->filled('genre')) {
+            $genreId = $request->input('genre');
+            $query->whereHas('generos', function($q) use ($genreId) {
+                $q->where('generos.id', $genreId);
+            });
+        }
+
+        $peliculas = $query->get();
+
+        return view('dashboard', compact('peliculas', 'generos'));
     }
 
     public function destroy(Pelicula $pelicula)

@@ -7,6 +7,22 @@
 
     <div class="p-6 space-y-4">
 
+        {{-- filtro de géneros --}}
+        <div class="mb-6">
+            <form method="GET" action="{{ route('dashboard') }}" class="flex items-center space-x-2">
+                <label for="genre" class="font-semibold">Filtrar por género:</label>
+                <select name="genre" id="genre" onchange="this.form.submit()" class="border rounded p-1">
+                    <option value="">Todos</option>
+                    @foreach($generos as $genero)
+                        <option value="{{ $genero->id }}" {{ request('genre') == $genero->id ? 'selected' : '' }}>{{ $genero->name }}</option>
+                    @endforeach
+                </select>
+                @if(request('genre'))
+                    <a href="{{ route('dashboard') }}" class="text-sm text-blue-600 hover:underline">limpiar</a>
+                @endif
+            </form>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($peliculas as $pelicula)
                 <div class="p-4 bg-white shadow rounded">
@@ -15,6 +31,12 @@
                     <p><strong>Duración:</strong> {{ $pelicula->duracion }} min</p>
                     <p><strong>Media:</strong> {{ $pelicula->media ?? 'Sin valoraciones' }}</p>
                     <p class="mt-2">{{ $pelicula->sinopsis }}</p>
+
+                    {{-- mostrar géneros asociados --}}
+                    @if($pelicula->generos->isNotEmpty())
+                        <p class="mt-2"><strong>Géneros:</strong> {{ $pelicula->generos->pluck('name')->join(', ') }}</p>
+                    @endif
+
                     @if ($pelicula->poster)
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
