@@ -52,4 +52,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Pelicula::class, 'pelicula_user')->withPivot('watched');
     }
+
+    /**
+     * Valoraciones hechas por el usuario
+     */
+    public function valoraciones()
+    {
+        return $this->hasMany(Valoraciones::class);
+    }
 }

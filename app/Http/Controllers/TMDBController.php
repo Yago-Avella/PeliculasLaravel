@@ -61,7 +61,7 @@ class TMDBController extends Controller
                 'duracion' => $data['runtime'] ?? 0,
                 'sinopsis' => $data['overview'] ?? '',
                 'poster' => isset($data['poster_path']) ? 'https://image.tmdb.org/t/p/w500' . $data['poster_path'] : null,
-                'media' => $data['vote_average'] ?? 0,
+                'media' => isset($data['vote_average']) ? (float) $data['vote_average'] : 0.0,
             ]
 
         );

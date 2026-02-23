@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TMDBController;
+use App\Http\Controllers\ValoracionesController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +30,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::delete('/dashboard/peliculas/{pelicula}', [DashboardController::class, 'destroy'])->name('dashboard.peliculas.destroy');
     Route::post('/dashboard/peliculas/{pelicula}/toggle-watched', [DashboardController::class, 'toggleWatched'])->name('dashboard.peliculas.toggleWatched');
+
+    // valoraciones: creación y listado
+    Route::get('/dashboard/peliculas/{pelicula}/valoracion', [ValoracionesController::class, 'create'])->name('valoraciones.create');
+    Route::post('/dashboard/peliculas/{pelicula}/valoracion', [ValoracionesController::class, 'store'])->name('valoraciones.store');
+
+    // vista pública de valoraciones
+    Route::get('/valoraciones', [ValoracionesController::class, 'index'])->name('valoraciones.index');
+    // admin toggle visibilidad
+    Route::patch('/valoraciones/{valoracion}/toggle', [ValoracionesController::class, 'toggleVisibility'])
+        ->name('valoraciones.toggle')
+        ->middleware('can:admin-only');
 
     Route::get('/tmdb', [TMDBController::class, 'index'])->name('tmdb.index');
     Route::get('/tmdb/search', [TMDBController::class, 'search'])->name('tmdb.search');

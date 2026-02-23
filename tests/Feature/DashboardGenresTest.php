@@ -27,7 +27,7 @@ class DashboardGenresTest extends TestCase
             'duracion' => 90,
             'sinopsis' => 'Texto',
             'poster' => null,
-            'media' => 5,
+            'media' => 5.00,
         ]);
         $p2 = Pelicula::create([
             'tmdb_id' => 2,
@@ -36,7 +36,7 @@ class DashboardGenresTest extends TestCase
             'duracion' => 95,
             'sinopsis' => 'Texto 2',
             'poster' => null,
-            'media' => 6,
+            'media' => 6.35,
         ]);
 
         $p1->generos()->attach($g1);
@@ -48,12 +48,50 @@ class DashboardGenresTest extends TestCase
         $response->assertOk();
         $response->assertSee('Filtrar por género')
                  ->assertSee('Acción')
-                 ->assertSee('Comedia');
+                 ->assertSee('Comedia')
+                 ->assertSee('Filtrar por año')
+                 ->assertSee('Filtrar por duración')
+                 ->assertSee('Ordenar por')
+                 // rating values should be formatted with two decimals
+                 ->assertSee('5.00')
+                 ->assertSee('6.35');
 
-        // applying filter
+        // apply ordering by title (should show P1 then P2)
+        $ordenarRespuesta = $this->actingAs($user)->get('/dashboard?sort=title');
+        $ordenarRespuesta->assertSeeInOrder(['Película 1', 'Película 2']);
+
+        // apply ordering by year (2000 then 2010)
+        $ordenarRespuesta2 = $this->actingAs($user)->get('/dashboard?sort=year');
+        $ordenarRespuesta2->assertSeeInOrder(['Película 1', 'Película 2']);
+
+        // apply ordering by rating (5.00 then 6.35)
+        $ordenarRespuesta3 = $this->actingAs($user)->get('/dashboard?sort=rating');
+        $ordenarRespuesta3->assertSeeInOrder(['Película 1', 'Película 2'])
+                         ->assertSee('5.00')
+                         ->assertSee('6.35');
+
+        // applying genre filter
         $response2 = $this->actingAs($user)->get('/dashboard?genre='.$g1->id);
         $response2->assertOk()
                   ->assertSee('Película 1')
+                  ->assertDontSee('Película 2');
+
+        // applying year filter
+        $response3 = $this->actingAs($user)->get('/dashboard?year=2010');
+        $response3->assertOk()
+                  ->assertSee('Película 2')
+                  ->assertDontSee('Película 1');
+
+        // applying duration filter
+        $response5 = $this->actingAs($user)->get('/dashboard?duration=95');
+        $response5->assertOk()
+                  ->assertSee('Película 2')
+                  ->assertDontSee('Película 1');
+
+        // applying combined filters (no match for genre=1 & year=2010 & duration=95)
+        $response4 = $this->actingAs($user)->get('/dashboard?genre='.$g1->id.'&year=2010&duration=95');
+        $response4->assertOk()
+                  ->assertDontSee('Película 1')
                   ->assertDontSee('Película 2');
     }
 

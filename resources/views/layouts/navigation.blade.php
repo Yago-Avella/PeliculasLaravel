@@ -20,6 +20,10 @@
                         Buscar películas
                     </x-nav-link>
 
+                    <x-nav-link :href="route('valoraciones.index')" :active="request()->routeIs('valoraciones.*')">
+                        Valoraciones
+                    </x-nav-link>
+
                     <!-- Panel de control admin -->
                     @can('admin-only')
                         <x-nav-link :href="route('panel.control')" :active="request()->routeIs('panel.control')">

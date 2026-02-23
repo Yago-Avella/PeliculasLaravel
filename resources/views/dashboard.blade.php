@@ -7,18 +7,43 @@
 
     <div class="p-6 space-y-4">
 
-        {{-- filtro de géneros --}}
+        {{-- filtros (género, año, duración) --}}
         <div class="mb-6">
-            <form method="GET" action="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                <label for="genre" class="font-semibold">Filtrar por género:</label>
-                <select name="genre" id="genre" onchange="this.form.submit()" class="border rounded p-1">
-                    <option value="">Todos</option>
-                    @foreach($generos as $genero)
-                        <option value="{{ $genero->id }}" {{ request('genre') == $genero->id ? 'selected' : '' }}>{{ $genero->name }}</option>
-                    @endforeach
-                </select>
-                @if(request('genre'))
-                    <a href="{{ route('dashboard') }}" class="text-sm text-blue-600 hover:underline">limpiar</a>
+            <form method="GET" action="{{ route('dashboard') }}" class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <label for="genre" class="font-semibold">Filtrar por género:</label>
+                    <select name="genre" id="genre" onchange="this.form.submit()" class="border rounded p-1">
+                        <option value="">Todos</option>
+                        @foreach($generos as $genero)
+                            <option value="{{ $genero->id }}" {{ request('genre') == $genero->id ? 'selected' : '' }}>{{ $genero->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="year" class="font-semibold">Filtrar por año:</label>
+                    <input type="number" name="year" id="year" min="1888" placeholder="Ej. 2023"
+                        value="{{ request('year') }}" class="border rounded p-1 w-20" onchange="this.form.submit()">
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="duration" class="font-semibold">Filtrar por duración:</label>
+                    <input type="number" name="duration" id="duration" min="1" placeholder="min"
+                        value="{{ request('duration') }}" class="border rounded p-1 w-20" onchange="this.form.submit()">
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="sort" class="font-semibold">Ordenar por:</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()" class="border rounded p-1">
+                        <option value="">Ninguno</option>
+                        <option value="title" {{ request('sort')=='title' ? 'selected' : '' }}>Título</option>
+                        <option value="year" {{ request('sort')=='year' ? 'selected' : '' }}>Año</option>
+                        <option value="rating" {{ request('sort')=='rating' ? 'selected' : '' }}>Valoración</option>
+                    </select>
+                </div>
+
+                @if(request()->filled('genre') || request()->filled('year') || request()->filled('duration') || request()->filled('sort'))
+                    <a href="{{ route('dashboard') }}" class="text-sm text-blue-600 hover:underline">limpiar filtros</a>
                 @endif
             </form>
         </div>
@@ -31,7 +56,7 @@
                     <h4 class="font-bold text-lg">{{ $pelicula->titulo }}</h4>
                     <p><strong>Año:</strong> {{ $pelicula->anyo }}</p>
                     <p><strong>Duración:</strong> {{ $pelicula->duracion }} min</p>
-                    <p><strong>Media:</strong> {{ $pelicula->media ?? 'Sin valoraciones' }}</p>
+                    <p><strong>Media:</strong> {{ $pelicula->media !== null ? number_format($pelicula->media, 2) : 'Sin valoraciones' }}</p>
                     <p class="mt-2">{{ $pelicula->sinopsis }}</p>
 
                     {{-- mostrar géneros asociados --}}
@@ -43,6 +68,19 @@
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
 
+                    @php
+                        $userRating = $pelicula->valoraciones->where('user_id', auth()->id())->first();
+                    @endphp
+                    <div class="flex gap-2 mt-2">
+                        @if($userRating)
+                            <span class="text-sm font-medium">Tu valoración: {{ $userRating->rating }} / 10</span>
+                        @endif
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <a href="{{ route('valoraciones.create', $pelicula) }}" class="flex-1 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full text-center">
+                            {{ $userRating ? 'Editar valoración' : 'Valorar película' }}
+                        </a>
+                    </div>
                     <div class="flex gap-2 mt-2">
                         <form action="{{ route('dashboard.peliculas.toggleWatched', $pelicula) }}" method="POST" class="flex-1">
                             @csrf
@@ -76,7 +114,7 @@
                     <h4 class="font-bold text-lg">{{ $pelicula->titulo }}</h4>
                     <p><strong>Año:</strong> {{ $pelicula->anyo }}</p>
                     <p><strong>Duración:</strong> {{ $pelicula->duracion }} min</p>
-                    <p><strong>Media:</strong> {{ $pelicula->media ?? 'Sin valoraciones' }}</p>
+                    <p><strong>Media:</strong> {{ $pelicula->media !== null ? number_format($pelicula->media, 2) : 'Sin valoraciones' }}</p>
                     <p class="mt-2">{{ $pelicula->sinopsis }}</p>
 
                     {{-- mostrar géneros asociados --}}
@@ -88,6 +126,19 @@
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
 
+                    @php
+                        $userRating = $pelicula->valoraciones->where('user_id', auth()->id())->first();
+                    @endphp
+                    <div class="flex gap-2 mt-2">
+                        @if($userRating)
+                            <span class="text-sm font-medium">Tu valoración: {{ $userRating->rating }} / 10</span>
+                        @endif
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <a href="{{ route('valoraciones.create', $pelicula) }}" class="flex-1 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full text-center">
+                            {{ $userRating ? 'Editar valoración' : 'Valorar película' }}
+                        </a>
+                    </div>
                     <div class="flex gap-2 mt-2">
                         <form action="{{ route('dashboard.peliculas.toggleWatched', $pelicula) }}" method="POST" class="flex-1">
                             @csrf
