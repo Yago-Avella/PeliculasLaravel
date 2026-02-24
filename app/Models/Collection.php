@@ -15,23 +15,17 @@ class Collection extends Model
         'is_public',
     ];
 
+    //pasa is_public a boolean (se me va a olvidar)
+
     protected $casts = [
         'is_public' => 'boolean',
     ];
 
-    /**
-     * Usuario propietario de la colección
-     */
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo{
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Películas en esta colección
-     */
-    public function peliculas(): BelongsToMany
-    {
+    public function peliculas(): BelongsToMany{
         return $this->belongsToMany(Pelicula::class, 'collection_pelicula');
     }
 }

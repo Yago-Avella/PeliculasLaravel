@@ -43,7 +43,6 @@
                                 Valoración: <span class="font-semibold text-yellow-600">{{ number_format($pelicula->media, 1) }}/10</span>
                             </p>
                         @endif
-
                         @if($pelicula->generos->count() > 0)
                             <div class="mt-3">
                                 @foreach($pelicula->generos as $genero)

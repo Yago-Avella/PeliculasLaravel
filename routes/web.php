@@ -19,6 +19,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    //Si no estas autenticao no pasas crack
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -39,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
 
     // vista pública de valoraciones
     Route::get('/valoraciones', [ValoracionesController::class, 'index'])->name('valoraciones.index');
-    // admin toggle visibilidad
+    // admin cambia visibilidad
     Route::patch('/valoraciones/{valoracion}/toggle', [ValoracionesController::class, 'toggleVisibility'])
         ->name('valoraciones.toggle')
         ->middleware('can:admin-only');
@@ -48,9 +49,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tmdb/search', [TMDBController::class, 'search'])->name('tmdb.search');
     Route::post('/tmdb/store/{tmdb_id}', [TMDBController::class, 'store'])->name('tmdb.store');
 
-    // Colecciones
+    // Colecciones (como te has pasao kiko)
     Route::get('/colecciones', [CollectionController::class, 'index'])->name('collections.index');
-    Route::get('/peliculas/{pelicula}/add-to-collection', [CollectionController::class, 'addMovieModal'])->name('collections.add-movie-modal');
+    Route::get('/peliculas/{pelicula}/add-to-collection', [CollectionController::class, 'addMovieModal'])->name('collections.anhadir-peliculas');
     Route::post('/peliculas/{pelicula}/add-to-collection', [CollectionController::class, 'storeMovie'])->name('collections.store-movie');
     Route::get('/colecciones/{collection}', [CollectionController::class, 'show'])->name('collections.show');
     Route::delete('/colecciones/{collection}', [CollectionController::class, 'destroy'])->name('collections.destroy');

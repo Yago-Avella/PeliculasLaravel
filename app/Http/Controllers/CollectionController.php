@@ -51,7 +51,9 @@ class CollectionController extends Controller
         $user = Auth::user();
         $collections = $user->collections()->get();
 
-        return view('collections.add-movie-modal', compact('pelicula', 'collections'));
+        // the view was renamed from add-movie-modal.blade.php to AñadirPeliculas.blade.php
+        // keep the dot notation matching the file name (accent included)
+        return view('collections.AñadirPeliculas', compact('pelicula', 'collections'));
     }
 
     /**

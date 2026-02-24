@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
 
+    {{-- Aviso por si acaso, las clases el ChatG, yo ni idea "cara feliz" --}}
+
     <div class="p-6 space-y-4">
 
         {{-- filtros (género, año, duración) --}}
@@ -42,6 +44,7 @@
                     </select>
                 </div>
 
+                {{--Guarrada pero es lo q hay--}}
                 @if(request()->filled('genre') || request()->filled('year') || request()->filled('duration') || request()->filled('sort'))
                     <a href="{{ route('dashboard') }}" class="text-sm text-blue-600 hover:underline">limpiar filtros</a>
                 @endif
@@ -68,7 +71,10 @@
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
 
-                    @php
+
+                    <!-- Asi se sacan las valoraciones en cada peli -->
+                                                                            <!--auth = Auth::user() -->
+                    @php                                                    
                         $userRating = $pelicula->valoraciones->where('user_id', auth()->id())->first();
                     @endphp
                     <div class="flex gap-2 mt-2">
@@ -82,7 +88,7 @@
                         </a>
                     </div>
                     <div class="flex gap-2 mt-2">
-                        <a href="{{ route('collections.add-movie-modal', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
+                        <a href="{{ route('collections.anhadir-peliculas', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
                             Agregar a colección
                         </a>
                     </div>
@@ -131,7 +137,8 @@
                         <img src="{{ $pelicula->poster }}" alt="{{ $pelicula->titulo }}" class="mt-2 w-full h-auto rounded">
                     @endif
 
-                    @php
+                                                                            <!--auth = Auth::user() -->
+                    @php                                                    
                         $userRating = $pelicula->valoraciones->where('user_id', auth()->id())->first();
                     @endphp
                     <div class="flex gap-2 mt-2">
@@ -145,7 +152,7 @@
                         </a>
                     </div>
                     <div class="flex gap-2 mt-2">
-                        <a href="{{ route('collections.add-movie-modal', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
+                        <a href="{{ route('collections.anhadir-peliculas', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
                             Agregar a colección
                         </a>
                     </div>

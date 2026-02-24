@@ -7,14 +7,11 @@ use App\Models\Pelicula;
 
 class Genero extends Model
 {
-    // allow mass assignment on name field
+    // lo unico q se puede asignar es el name
     protected $fillable = ['name'];
 
-    /**
-     * Películas asociadas a este género (muchos a muchos)
-     */
-    public function peliculas()
-    {
+    // Películas asociadas a este género (muchos a muchos)
+    public function peliculas(){
         return $this->belongsToMany(Pelicula::class, 'genero_pelicula');
     }
 }
