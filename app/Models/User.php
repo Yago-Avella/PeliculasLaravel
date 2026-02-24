@@ -60,4 +60,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Valoraciones::class);
     }
+
+    /**
+     * Colecciones de películas del usuario
+     */
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
 }

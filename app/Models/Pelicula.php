@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Genero;
+use App\Models\User;
 
 class Pelicula extends Model
 {
@@ -41,5 +42,21 @@ class Pelicula extends Model
     public function valoraciones()
     {
         return $this->hasMany(Valoraciones::class);
+    }
+
+    /**
+     * Usuarios que tienen esta película en su catálogo
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'pelicula_user');
+    }
+
+    /**
+     * Colecciones que contienen esta película
+     */
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class, 'collection_pelicula');
     }
 }

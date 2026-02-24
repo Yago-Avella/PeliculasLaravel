@@ -82,6 +82,11 @@
                         </a>
                     </div>
                     <div class="flex gap-2 mt-2">
+                        <a href="{{ route('collections.add-movie-modal', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
+                            Agregar a colección
+                        </a>
+                    </div>
+                    <div class="flex gap-2 mt-2">
                         <form action="{{ route('dashboard.peliculas.toggleWatched', $pelicula) }}" method="POST" class="flex-1">
                             @csrf
                             <button type="submit" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 w-full">
@@ -137,6 +142,11 @@
                     <div class="flex gap-2 mt-2">
                         <a href="{{ route('valoraciones.create', $pelicula) }}" class="flex-1 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full text-center">
                             {{ $userRating ? 'Editar valoración' : 'Valorar película' }}
+                        </a>
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <a href="{{ route('collections.add-movie-modal', $pelicula) }}" class="flex-1 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 w-full text-center">
+                            Agregar a colección
                         </a>
                     </div>
                     <div class="flex gap-2 mt-2">

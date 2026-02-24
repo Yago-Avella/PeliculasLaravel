@@ -7,6 +7,8 @@ use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TMDBController;
 use App\Http\Controllers\ValoracionesController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CollectionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,17 +47,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tmdb', [TMDBController::class, 'index'])->name('tmdb.index');
     Route::get('/tmdb/search', [TMDBController::class, 'search'])->name('tmdb.search');
     Route::post('/tmdb/store/{tmdb_id}', [TMDBController::class, 'store'])->name('tmdb.store');
+
+    // Colecciones
+    Route::get('/colecciones', [CollectionController::class, 'index'])->name('collections.index');
+    Route::get('/peliculas/{pelicula}/add-to-collection', [CollectionController::class, 'addMovieModal'])->name('collections.add-movie-modal');
+    Route::post('/peliculas/{pelicula}/add-to-collection', [CollectionController::class, 'storeMovie'])->name('collections.store-movie');
+    Route::get('/colecciones/{collection}', [CollectionController::class, 'show'])->name('collections.show');
+    Route::delete('/colecciones/{collection}', [CollectionController::class, 'destroy'])->name('collections.destroy');
+    Route::patch('/colecciones/{collection}/visibility', [CollectionController::class, 'updateVisibility'])->name('collections.update-visibility');
+    Route::delete('/colecciones/{collection}/peliculas/{pelicula}', [CollectionController::class, 'removeMovie'])->name('collections.remove-movie');
 });
 
-Route::get('/panel-control', function () {
+Route::get('/panel-control', [AdminController::class, 'panel'])
+    ->name('panel.control')
+    ->middleware('can:admin-only');
 
-    if (Gate::denies('admin-only')) {
-        abort(403);
-    }
-
-    return view('admin.panel-control');
-
-})->name('panel.control');
+Route::delete('/panel-control/peliculas/{pelicula}', [AdminController::class, 'destroyMovie'])
+    ->name('admin.movie.destroy')
+    ->middleware('can:admin-only');
 
 Route::get('/peliculas', [PeliculasController::class, 'index'])->name('movies.index');
 
